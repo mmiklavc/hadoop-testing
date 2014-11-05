@@ -5,7 +5,7 @@ import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hive.hcatalog.data.HCatRecord;
 import org.apache.hive.hcatalog.data.schema.HCatSchema;
 
-public class CMSTopStateMapper extends Mapper<WritableComparable<LongWritable>, HCatRecord, Text, Text> {
+public class CMSStatePaymentsMapper extends Mapper<WritableComparable<LongWritable>, HCatRecord, Text, Text> {
 
     private SchemaProvider schemaProvider = new HCatSchemaProvider();
 

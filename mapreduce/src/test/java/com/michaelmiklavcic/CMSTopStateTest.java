@@ -1,31 +1,39 @@
 package com.michaelmiklavcic;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hive.serde2.typeinfo.TypeInfoFactory;
-import org.apache.hadoop.io.*;
-import org.apache.hadoop.mrunit.mapreduce.*;
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mrunit.mapreduce.MapDriver;
+import org.apache.hadoop.mrunit.mapreduce.ReduceDriver;
 import org.apache.hive.hcatalog.common.HCatException;
 import org.apache.hive.hcatalog.data.DefaultHCatRecord;
-import org.apache.hive.hcatalog.data.schema.*;
-import org.junit.*;
+import org.apache.hive.hcatalog.data.schema.HCatFieldSchema;
+import org.apache.hive.hcatalog.data.schema.HCatSchema;
+import org.apache.hive.hcatalog.data.schema.HCatSchemaUtils;
+import org.junit.Before;
+import org.junit.Test;
 
 public class CMSTopStateTest {
 
     private TestSchemaProvider provider;
-    private CMSTopStateMapper mapper;
-    private CMSTopStateReducer reducer;
+    private CMSStatePaymentsMapper mapper;
+    private CMSStatePaymentsReducer reducer;
     private MapDriver mapDriver;
     private ReduceDriver reduceDriver;
 
     @Before
     public void setup() {
         provider = new TestSchemaProvider();
-        mapper = new CMSTopStateMapper();
+        mapper = new CMSStatePaymentsMapper();
         mapper.setSchemaProvider(provider);
-        reducer = new CMSTopStateReducer();
+        reducer = new CMSStatePaymentsReducer();
         mapDriver = MapDriver.newMapDriver(mapper);
         reduceDriver = ReduceDriver.newReduceDriver(reducer);
     }
@@ -51,11 +59,6 @@ public class CMSTopStateTest {
         mapDriver.withOutput(new Text("MI"), new Text("13.53"));
         mapDriver.withOutput(new Text("CA"), new Text("18.3"));
         mapDriver.withOutput(new Text("IL"), new Text("16.06"));
-//        mapDriver.withOutput(new Text("CA"), new FloatWritable(69));
-//        mapDriver.withOutput(new Text("TX"), new FloatWritable(14.38f));
-//        mapDriver.withOutput(new Text("MI"), new FloatWritable(13.53f));
-//        mapDriver.withOutput(new Text("CA"), new FloatWritable(18.3f));
-//        mapDriver.withOutput(new Text("IL"), new FloatWritable(16.06f));
         mapDriver.runTest();
     }
 
@@ -143,13 +146,6 @@ public class CMSTopStateTest {
         reduceDriver.withOutput(new Text("TX"), new Text("14.38"));
         reduceDriver.withOutput(new Text("MI"), new Text("13.53"));
         reduceDriver.withOutput(new Text("IL"), new Text("16.06"));
-//        reduceDriver.withInput(new Text("TX"), Arrays.asList(new FloatWritable[] { new FloatWritable(14.38f) }));
-//        reduceDriver.withInput(new Text("MI"), Arrays.asList(new FloatWritable[] { new FloatWritable(13.53f) }));
-//        reduceDriver.withInput(new Text("IL"), Arrays.asList(new FloatWritable[] { new FloatWritable(16.06f) }));
-//        reduceDriver.withOutput(new Text("CA"), new FloatWritable(87.3f));
-//        reduceDriver.withOutput(new Text("TX"), new FloatWritable(14.38f));
-//        reduceDriver.withOutput(new Text("MI"), new FloatWritable(13.53f));
-//        reduceDriver.withOutput(new Text("IL"), new FloatWritable(16.06f));
         reduceDriver.runTest();
     }
 

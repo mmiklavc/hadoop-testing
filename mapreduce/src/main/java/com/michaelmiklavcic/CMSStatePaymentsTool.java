@@ -1,17 +1,20 @@
 package com.michaelmiklavcic;
 
-import org.apache.hadoop.conf.*;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.*;
+import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-import org.apache.hadoop.util.*;
+import org.apache.hadoop.util.GenericOptionsParser;
+import org.apache.hadoop.util.Tool;
+import org.apache.hadoop.util.ToolRunner;
 import org.apache.hive.hcatalog.mapreduce.HCatInputFormat;
 
-public class CMSTopStateTool extends Configured implements Tool {
+public class CMSStatePaymentsTool extends Configured implements Tool {
 
     public static void main(String[] args) throws Exception {
-        int exitCode = ToolRunner.run(new CMSTopStateTool(), args);
+        int exitCode = ToolRunner.run(new CMSStatePaymentsTool(), args);
         System.exit(exitCode);
     }
 
@@ -31,14 +34,12 @@ public class CMSTopStateTool extends Configured implements Tool {
 
         Job job = Job.getInstance(conf, jobName);
         job.setInputFormatClass(HCatInputFormat.class);
-        job.setJarByClass(CMSTopStateTool.class);
-        job.setMapperClass(CMSTopStateMapper.class);
-        job.setReducerClass(CMSTopStateReducer.class);
+        job.setJarByClass(CMSStatePaymentsTool.class);
+        job.setMapperClass(CMSStatePaymentsMapper.class);
+        job.setReducerClass(CMSStatePaymentsReducer.class);
         job.setMapOutputKeyClass(Text.class);
-//        job.setMapOutputValueClass(FloatWritable.class);
         job.setMapOutputValueClass(Text.class);
         job.setOutputKeyClass(Text.class);
-//        job.setOutputValueClass(FloatWritable.class);
         job.setOutputValueClass(Text.class);
 
         HCatInputFormat.setInput(job, dbName, inTableName);
